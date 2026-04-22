@@ -1,0 +1,138 @@
+<div class="reveal">
+  <div class="slides">
+
+    <!-- Title Slide -->
+    <section>
+      <h1>MCP Human in the Loop</h1>
+      <p>Architectural Patterns for User Intervention</p>
+    </section>
+
+    <!-- Alternatives Overview -->
+    <section>
+      <h2>Implementation Alternatives</h2>
+      <ol>
+        <li><strong>Explicit Prompting</strong> (User-Initiated)</li>
+        <li><strong>MCP Elicitation</strong> (Server-Initiated)</li>
+      </ol>
+    </section>
+
+    <!-- Explicit Prompting Section -->
+    <section>
+      <section>
+        <h2>1. Explicit Prompting</h2>
+        <p><em>User-Initiated Control</em></p>
+        <p>The server returns broad results; the user decides how to narrow them down.</p>
+      </section>
+      <section>
+        <h3>Workflow & Logic</h3>
+        <ul>
+          <li><strong>Workflow:</strong> Server lists all options (files, PRs, etc.)</li>
+          <li><strong>User Action:</strong> Client renders list; user clicks a selection</li>
+          <li><strong>Decision:</strong> Responsibility lies with the client/user, not the model</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Key Details</h3>
+        <ul>
+          <li><strong>Use Case:</strong> Selecting a file, choosing a branch, or picking a team member</li>
+          <li><strong>Advantage:</strong> Zero ambiguity. Works with <strong>any</strong> MCP client</li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- MCP Elicitation Section -->
+    <section>
+      <section>
+        <h2>2. MCP Elicitation</h2>
+        <p><em>Server-Initiated Pausing</em></p>
+        <p>The server pauses execution to request missing parameters or approvals.</p>
+      </section>
+      <section>
+        <h3>Workflow & Logic</h3>
+        <ul>
+          <li><strong>Workflow:</strong> Server identifies missing data and sends a JSON schema request</li>
+          <li><strong>User Action:</strong> Client renders a dynamic form or confirmation dialog</li>
+          <li><strong>Decision:</strong> Server manages state; user provides validation</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Key Details</h3>
+        <ul>
+          <li><strong>Use Case:</strong> Confirming "delete," prompting for branch names, or requesting API keys</li>
+          <li><strong>Advantage:</strong> Maintains context in complex, multi-step workflows</li>
+        </ul>
+      </section>
+      <section>
+        <h3>⚠️ Support Caveat</h3>
+        <p>Currently limited to:</p>
+        <small>
+          Visual Studio Code (Copilot) | VS 2026 | Claude Desktop | Claude Code | Cursor | MCPJam | Goose
+        </small>
+      </section>
+    </section>
+
+    <!-- Comparison Table -->
+    <section>
+      <h2>Feature Comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Explicit Prompting</th>
+            <th>MCP Elicitation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Trigger</td>
+            <td>User/Client initiates</td>
+            <td>Server pauses</td>
+          </tr>
+          <tr>
+            <td>UX</td>
+            <td>List Selection</td>
+            <td>Modal / Form</td>
+          </tr>
+          <tr>
+            <td>Data Flow</td>
+            <td>Passive Retrieval</td>
+            <td>Active Input</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Visual Example -->
+    <section>
+      <h3>Elicitation in Action</h3>
+      <img src="https://github.ibm.com/user-attachments/assets/80bf94d2-b2bc-4679-b324-b877b74b7fd9" alt="Elicitation Example" style="max-height: 500px;">
+    </section>
+
+    <!-- Sequence Diagram -->
+    <section>
+      <h3>Workflow Sequence</h3>
+      <pre><code class="language-mermaid">
+sequenceDiagram
+    participant U as User
+    participant C as MCP Client
+    participant S as MCP Server
+
+    Note over U,S: Method 1: Explicit Prompting
+    U->>C: "List PRs"
+    C->>S: list_prs()
+    S-->>C: Returns all PRs
+    C->>U: "Click one to review"
+    
+    Note over U,S: Method 2: MCP Elicitation
+    U->>C: "Merge PR #101"
+    C->>S: merge_pr(id=101)
+    S-->>C: Request Elicitation (Form)
+    C->>U: Show Modal: "Confirm Merge?"
+    U->>C: Approve
+    C->>S: Submit Response
+      </code></pre>
+    </section>
+
+  </div>
+</div>
+
